@@ -1,0 +1,54 @@
+@import "tailwindcss";
+
+:root {
+  /* --background: #ffffff;
+  --foreground: #171717; */
+
+  --primary: #082A57;
+  --primaryBG: #FDFDFD;
+  --secondary: #1B66CB;
+  --secondaryBG: #DEE1E7;
+}
+
+@theme inline {
+  --color-background: var(--primaryBG);
+  --color-foreground: var(--secondaryBG);
+  --font-sans: var(--font-geist-sans);
+  --font-mono: var(--font-geist-mono);
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    /* --primary: #082A57; */
+    --primary: #0f4886;
+    --primaryBG: #FDFDFD;
+    --secondary: #1B66CB;
+    --secondaryBG: #DEE1E7;
+  }
+}
+
+div {
+  /* background: var(--primaryBG);
+  color: var(--primary); */
+  font-family: Arial, Helvetica, sans-serif;
+}
+
+.complete {
+  background-color: var(--secondary);
+}
+
+
+.dropDownMenu {
+  
+  position: absolute;
+  top: 100%;
+  right: 0;
+  width: 150px;
+  padding: 15px;
+  border-radius: 15px;
+  background-color: white;
+  border: 1px solid var(--primary);
+  z-index: 50; /* Make sure it appears above */
+  box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+}
+
