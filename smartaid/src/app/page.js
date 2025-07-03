@@ -32,7 +32,7 @@ function Current_Medications_Activity() {
   return (
     <>
       <div className='p-4 mt-4 border border-gray-300 rounded-lg shadow-sm'>
-        <h3 className="text-xl font-semibold mb-2">Today's Medications</h3>
+        <h3 className="text-xl font-semibold mb-2">Today&apos;s Medications</h3>
         {medicationList}
 
         <div className="mt-4 cursor-pointer hover:underline">

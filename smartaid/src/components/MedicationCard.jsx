@@ -1,4 +1,6 @@
+import React from 'react';
 import {useState} from 'react';
+import PropTypes from 'prop-types';
 
 // MedicationCard Component
 export default function MedicationCard({medication,time}) {
@@ -26,4 +28,9 @@ export default function MedicationCard({medication,time}) {
 
   </>)
     
-}
+};
+
+MedicationCard.propTypes = {
+    medication: PropTypes.string.isRequired,
+    time: PropTypes.string.isRequired
+};
