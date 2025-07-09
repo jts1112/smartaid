@@ -20,10 +20,12 @@
 @media (prefers-color-scheme: dark) {
   :root {
     /* --primary: #082A57; */
-    --primary: #0f4886;
+    --primary: rgb(15, 72, 134);
     --primaryBG: #FDFDFD;
     --secondary: #1B66CB;
     --secondaryBG: #DEE1E7;
+    --textPrimary:var(--primary);
+    --textSecondary: rgb(45, 44, 44);
   }
 }
 

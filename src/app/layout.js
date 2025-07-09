@@ -1,5 +1,6 @@
-"use clint";
+
 import React from "react";
+
 import {
   ClerkProvider,
   SignInButton,
@@ -33,25 +34,30 @@ export default function RootLayout({ children }) {
     <ClerkProvider publishableKey={process.env.NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY}>
       
       <html lang="en">
-        <body className={`${geistSans.variable} ${geistMono.variable} antialiased`}>
-          <div className="flex items-center justify-between">
-               <h1 className="text-3xl font-bold text-(--primary)">SmartAid</h1>
-              <header className="flex justify-end items-center p-4 gap-4 h-16">
-                <SignedOut>
-                  <SignInButton />
-                  <SignUpButton>
-                    <button className="bg-(--primary) text-white rounded-full font-medium text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 cursor-pointer">
-                      Sign Up
-                    </button>
-                  </SignUpButton>
-                </SignedOut>
-                <SignedIn>
-                  <UserButton />
-                </SignedIn>
-              </header>
+        <body className={`${geistSans.variable} ${geistMono.variable} antialiased min-h-screen flex flex-col items-center`}>
+
+            {/* Headder */}
+            <div className="w-full max-w-6xl flex justify-between items-center px-6 py-4">
+                <h1 className="text-3xl font-bold text-(--primary)">SmartAid</h1>
+                <header className="flex gap-4">
+                  <SignedOut>
+                    <SignInButton />
+                    <SignUpButton>
+                      <button className="bg-(--primary) text-white rounded-full font-medium text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 cursor-pointer">
+                        Sign Up
+                      </button>
+                    </SignUpButton>
+                  </SignedOut>
+                  <SignedIn>
+                    <UserButton />
+                  </SignedIn>
+                </header>
+            </div>
+
+
+          <div className="w-full max-w-6xl flex flex-col items-center justify-center px-6 py-10">
+            {children}
           </div>
-          
-          {children}
         </body>
       </html>
       

@@ -56,6 +56,23 @@ SmartAid is a personal health tracking web app designed to help users:
   Core React concepts, hooks, and best practices.  
   _Keywords: `Documentation`, `Hooks`, `JSX`, `State Management`_
 
+- [MongoDB Official Docs](https://www.mongodb.com/developer/languages/javascript/nextjs-with-mongodb/)
+  Setting up MongoDB with next.js.  
+  _Keywords: `Database`, `Setup`_
+
+- [Vercel Offical Docs](https://vercel.com/docs)
+  Setting up Vercel with a next.js project.  
+  _Keywords: `Cloud Deployment`, `Frontend`_
+
+- [Clerk Official Docs](https://clerk.com/docs)
+  Configuring Authentication and Authorization, Route Protection
+  _Keywords: `Authentication`, `Authorization`_
+
+
+-[Undraw](https://undraw.co/illustrations/2)
+  High-quality modern svg images
+
+
 ---
 
 ## 📌 Future Enhancements
