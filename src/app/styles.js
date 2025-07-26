@@ -4,19 +4,21 @@ export const layout = {
     container: "max-w-7xl mx-auto px-4 sm:px-6 lg:px-8",
     section: "py-4 md:py-8",
     centeredFlex: "flex items-center justify-center",
-    betweenFlex: "flex items-center justify-around w-full",
+    // betweenFlex: "flex items-center justify-between w-full",
+    betweenFlex: "flex flex-col sm:flex-row items-center justify-between w-full",
 }
 
 
 export const cards = {
   base: "p-4 border border-gray-200 rounded-lg shadow-sm bg-white",
-  feature: "border-solid border-2 border-(--primary) rounded p-3",
+  feature: "border-solid border-2 border-(--primary) rounded p-3 w-sm",
 };
 
 export const typography = {
   heading1: "text-4xl md:text-5xl font-bold text-(--textPrimary)",
   heading2: "text-2xl md:text-3xl font-semibold text-(--textPrimary)",
-  paragraph: "text-base md:text-lg text-(--textSecondary)",
+  // paragraph: "text-base md:text-lg text-(--textSecondary)",
+  paragraph: "text-lg text-(--textSecondary)",
   link: "text-blue-600 hover:underline",
 };
 

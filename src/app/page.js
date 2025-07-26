@@ -8,9 +8,12 @@ import { useRouter } from 'next/navigation';
 import Image from 'next/image';
 
 import AdventurerSVG from '../../public/adventurer_light.svg';
-import pill from '../../public/pill.svg'
-import doctors from '../../public/medicine_light.svg'
-import notebook from '../../public/notebook.svg'
+import pill from '../../public/pill.svg';
+import doctors from '../../public/medicine_light.svg';
+import notebook from '../../public/notebook.svg';
+import bellIcon from '../../public/bell-ringing.svg';
+import cameraIcon from '../../public/camera.svg';
+
 import {
   ClerkProvider,
   SignInButton,
@@ -29,7 +32,7 @@ function Home() {
   return (<>
 
     <div className={layout.betweenFlex}>
-      <div className=''>
+      <div className='pr-4'>
         
         <p className="md:text-4xl font-bold text-(--primary) text-2xl">Stay on Track with Your Health</p>
         <div className='lg:w-md py-3'>
@@ -50,31 +53,62 @@ function Home() {
       </div>
       
 
-      <Image src={doctors} alt="App" height={200} />
+      <Image  className="m-auto" src={doctors} alt="App" height={200} />
     </div>
 
     <div className={layout.section}>
       <h3 className='text-2xl text-center font-semibold text-(--primary) p-5'>Why SmartAid?</h3>
     
-      <div className='flex gap-5'>
+      <div className='flex flex-col sm:flex-wrap gap-5 justify-center sm:flex-row'>
 
-        <div className={cards.feature}>
-          <div className='flex justify-start items-center'>
-              <Image src={pill} alt="App" height={30} />
-              <h4 className='text-(--primary) font-bold'>Medication Reminders</h4>
+          <div className={cards.feature}>
+            <div className='flex justify-start items-center'>
+                <Image src={bellIcon} alt="App" height={30} />
+                <h4 className='text-(--primary) font-bold'>Medication Reminders</h4>
+            </div>
+            <p>Never miss a dose again with smart daily alerts.</p>
           </div>
-          <p>Never miss a dose again with smart daily alerts.</p>
-        </div>
 
-        <div className={cards.feature}>
+          <div className={cards.feature}>
+            <div className='flex justify-start items-center'>
+              <Image src={notebook} alt="App" height={30} />
+              <h4 className='text-(--primary) font-bold'>Mood & Symtom Logs</h4>
+            </div>
+            <p>Track how you feel to uncover patterns over time</p>
+          </div>
 
-          <div className='flex justify-start items-center'>
-            <Image src={notebook} alt="App" height={30} />
-            <h4 className='text-(--primary) font-bold'>Mood & Symtom Logs</h4>
+
+          <div className={cards.feature}>
+            <div className='flex justify-start items-center'>
+                <Image src={pill} alt="App" height={30} />
+                <h4 className='text-(--primary) font-bold'>Track Patient Behavior</h4>
+            </div>
+            <p>Verify that patients are taking medications.</p>
+          </div>
+
+          <div className={cards.feature}>
+            <div className='flex justify-start items-center'>
+              <Image src={cameraIcon} alt="App" height={30} />
+              <h4 className='text-(--primary) font-bold'>Picture Tracking</h4>
+            </div>
+            <p>Take a picture of your medication to track.</p>
           </div>
         
-          <p className=''>Track how you feel to uncover patterns over time</p>
-        </div>
+          <div className={cards.feature}>
+            <div className='flex justify-start items-center'>
+                <Image src={pill} alt="App" height={30} />
+                <h4 className='text-(--primary) font-bold'>Medication Reminders</h4>
+            </div>
+            <p>Never miss a dose again with smart daily alerts.</p>
+          </div>
+
+          <div className={cards.feature}>
+            <div className='flex justify-start items-center'>
+              <Image src={notebook} alt="App" height={30} />
+              <h4 className='text-(--primary) font-bold'>Mood & Symtom Logs</h4>
+            </div>
+            <p>Track how you feel to uncover patterns over time</p>
+          </div>
 
       </div>
     </div>
