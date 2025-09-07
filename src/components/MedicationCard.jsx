@@ -10,7 +10,9 @@ export default function MedicationCard({medication,time}) {
   const toggleMedication = () => {
     setIsSelected((prev) => !prev);
   };
-
+  const timeOfUse = new Date()
+  timeOfUse.setHours(0,0,0)
+  timeOfUse.setMinutes(time)
   return (<>
   
      <div className="flex  justify-between">
@@ -23,7 +25,7 @@ export default function MedicationCard({medication,time}) {
           ></button>
           <p>{medication}</p>
         </div>
-        <p>{time}</p>
+        <p>{timeOfUse.toLocaleTimeString()}</p>
       </div>
 
 

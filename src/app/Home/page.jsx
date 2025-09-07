@@ -5,19 +5,14 @@ import Navbar from '../../components/NavBar';
 import Header from '../../components/Header';
 import MedicationCard from '../../components/MedicationCard';
 import { ClerkLoading, RedirectToSignIn, SignedIn, UserButton} from '@clerk/nextjs';
-import Progress_bar from '../../components/ProgressBar';
-// import { clerkClient } from '@clerk/nextjs/dist/types/server';
-import { useUser } from '@clerk/nextjs';
-
-const name = "John";
-const currentMedications = [{id:0,name:"Ibuprofen",time:"8:00 am"},{id:1,name:"Aspirin",time:"9:00 am"}];
+import { useUser,useAuth } from '@clerk/nextjs';
+import { useEffect, useState } from 'react';
+import { createDateSchedule } from '../../../lib/actions';
+import {MedicationChart} from '../../components/MedicationChart';
 
 
 export default function App() {
   const {isSignedIn,user,isLoaded} =  useUser();
-  console.log("User: ",user);
-  console.log("Is Signed In: ",isSignedIn);
-  console.log("Is Loaded: ", isLoaded);
 
   if (!isLoaded) {
     return <ClerkLoading/>;
@@ -29,31 +24,43 @@ export default function App() {
   
     return (<>
     <div className=" flex-column mx-auto max-w-lg">
-      {/* <Navbar/> */}
       <h2 className="self-end pt-4 text-2xl font-bold max-w-sm">Hi, {user.firstName}</h2>
-      <p>Your next medication is in <span className="text-(--primary)">42 minutes</span></p>
       <Current_Medications_Activity/>
       <Quick_Log_Activity/>
       <Recent_Activities_Activity/>
+      {/* <MedicationChart/> */}
     </div>
      </>)
 };
 
 function Current_Medications_Activity() {
   
-  const medicationList = currentMedications.map((medication) =>(
-    <MedicationCard key={medication.id} medication={medication.name} time={medication.time}/>
+  const [medication, setmedication] = useState([]);
+  useEffect(() => {
+    const fetchMedications = async () => {
+      const res = await fetch(`/api/medication`);
+      const data = await res.json();
+      console.log(data[0].medicine)
+      setmedication(data[0].medicine);
+    };
+
+    fetchMedications();
+  }, []);
+
+ 
+  const medicationList = medication.map((medication) =>(
+    <MedicationCard key={medication._id} medication={medication.medication} time={medication.timeOfUse}/>
   ))
 
   return (
     <>
+      {nextMedication(medication)}
       <div className='p-4  mt-4 border border-gray-300 rounded-lg shadow-sm'>
-        <Progress_bar bgcolor='--secondary' progress={50} height='20px'/>
         <h3 className="text-xl font-semibold mb-2">Today&apos;s Medications</h3>
         {medicationList}
 
         <div className="mt-4 cursor-pointer hover:underline">
-          <p className="text-(--secondary) text-right">Add Medication</p>
+          <p className="text-(--secondary) text-right">Edit Medications</p>
         </div>
       </div> 
     </>
@@ -67,16 +74,16 @@ function Quick_Log_Activity(){
     <>
       <div className='flex-column mt-8 p-4 border border-gray-300 rounded-lg shadow-sm'>
         <h3 className="text-xl font-semibold mb-2">Quick Log</h3>
-        <select className='w-full p-2 border border-gray-300 rounded-md'>
-          <option value="Happy">Happy</option>
-          <option value="Sad">Sad</option>
-          <option value="Anxious">Anxious</option>
-          <option value="Angry">Angry</option>
-        </select>
+        <form action="">
+          <button className="" value={1}>&#128542;</button>
+          <button className="" value={2}>&#128532;</button>
+          <button className="" value={3}>&#128522;</button>
+          <button className="" value={4}>&#128513;</button> 
+        </form>
        <textarea className="w-full mt-4 mb-4 p-2 border border-gray-300 rounded-md" rows="1" placeholder='Enter Symptoms'></textarea>
       
         <div className="flex justify-end">
-          <button className="self-end text-center p-1 w-18 border-2 border-(--secondary) rounded-sm bg-(--secondary) text-white">Save</button>
+          <button className="self-end text-center p-1 w-18 border-2 border-(--secondary) rounded-sm bg-(--secondary) text-white" onClick={createDateSchedule}>Save</button>
         </div>
       </div> 
     </>
@@ -96,4 +103,40 @@ function Recent_Activities_Activity() {
     </div>
 
     </>)
+}
+
+function Medication() {
+  const [medication, setmedication] = useState([]);
+
+  useEffect(() => {
+    const fetchMedications = async () => {
+      const res = await fetch('/api/medication');
+      const data = await res.json();
+      setmedication(data);
+    };
+
+    fetchMedications();
+  }, []);
+}
+
+function nextMedication(medication) {
+  const now = new Date();
+  const currentMinutes = now.getHours() * 60 + now.getMinutes();
+  
+  if (medication.length > 0) {
+    const timeTill = medication[0]["timeOfUse"] - currentMinutes
+    switch (true) {
+      case timeTill <= -60:
+        return <p>You missed your medication <span className="text-(--primary)">{Math.floor(Math.abs(timeTill)/60)} Hours {Math.abs(timeTill%60)} Minutes ago</span></p>
+      case timeTill >= 60:
+        return <p>Your next medication is in <span className="text-(--primary)">{Math.floor(timeTill/60)} Hours {timeTill%60} Minutes</span></p>
+      case timeTill > -60: // timeTill > -60:
+        return <p>You missed your medication <span className="text-(--primary)">{Math.abs(timeTill)} Minutes ago</span></p>
+      case timeTill < 60:
+        return <p>Your next medication is in <span className="text-(--primary)">{timeTill} Minutes</span></p>
+    }
+     
+  } else {
+    return <p></p>
+  }
 }
