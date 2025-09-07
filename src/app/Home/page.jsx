@@ -40,16 +40,18 @@ function Current_Medications_Activity() {
     const fetchMedications = async () => {
       const res = await fetch(`/api/medication`);
       const data = await res.json();
-      console.log(data[0].medicine)
-      setmedication(data[0].medicine);
+      if (data.length != 0) {
+        console.log(data[0].medicine)
+        setmedication(data[0].medicine);
+      }
     };
 
     fetchMedications();
   }, []);
 
  
-  const medicationList = medication.map((medication) =>(
-    <MedicationCard key={medication._id} medication={medication.medication} time={medication.timeOfUse}/>
+  const medicationList = medication.map((medication,index) =>(
+    <MedicationCard key={index} medication={medication.medication} time={medication.timeOfUse}/>
   ))
 
   return (
@@ -83,7 +85,7 @@ function Quick_Log_Activity(){
        <textarea className="w-full mt-4 mb-4 p-2 border border-gray-300 rounded-md" rows="1" placeholder='Enter Symptoms'></textarea>
       
         <div className="flex justify-end">
-          <button className="self-end text-center p-1 w-18 border-2 border-(--secondary) rounded-sm bg-(--secondary) text-white" onClick={createDateSchedule}>Save</button>
+          <button className="self-end text-center p-1 w-18 border-2 border-(--secondary) rounded-sm bg-(--secondary) text-white" onClick={createDateSchedule}>Load Today</button>
         </div>
       </div> 
     </>
