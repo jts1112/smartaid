@@ -8,7 +8,8 @@ import { ClerkLoading, RedirectToSignIn, SignedIn, UserButton} from '@clerk/next
 import { useUser,useAuth } from '@clerk/nextjs';
 import { useEffect, useState } from 'react';
 import { createDateSchedule } from '../../../lib/actions';
-import {MedicationChart} from '../../components/MedicationChart';
+// import {MedicationChart} from '../../components/MedicationChart';
+import {ScheduleForm} from '../../components/ScheduleForm';
 
 
 export default function App() {
@@ -28,7 +29,7 @@ export default function App() {
       <Current_Medications_Activity/>
       <Quick_Log_Activity/>
       <Recent_Activities_Activity/>
-      {/* <MedicationChart/> */}
+      <ScheduleForm/>
     </div>
      </>)
 };
@@ -41,7 +42,6 @@ function Current_Medications_Activity() {
       const res = await fetch(`/api/medication`);
       const data = await res.json();
       if (data.length != 0) {
-        console.log(data[0].medicine)
         setmedication(data[0].medicine);
       }
     };
