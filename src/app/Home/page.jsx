@@ -11,6 +11,35 @@ import { createDateSchedule } from '../../../lib/actions';
 // import {MedicationChart} from '../../components/MedicationChart';
 import {ScheduleForm} from '../../components/ScheduleForm';
 
+var medicines =  
+    [
+  {
+    "_id": "68c829c64dc0b0901876d56f",
+    "userId": "XXXXX",
+    "date": "2025-09-15T14:59:17.460Z",
+    "medicine": [
+      {
+        "dayOfWeek": [
+          1
+        ],
+        "medication": "Tylenol",
+        "timeOfUse": 480,
+        "taken": false,
+        "userId": "XXXX"
+      },
+      {
+        "dayOfWeek": [
+          1
+        ],
+        "medication": "Xyzal",
+        "timeOfUse": 540,
+        "taken": false,
+        "userId": "XXX"
+      }
+    ]
+  }
+]
+
 
 export default function App() {
   const {isSignedIn,user,isLoaded} =  useUser();
@@ -19,7 +48,7 @@ export default function App() {
     return <ClerkLoading/>;
   }
 
-  if (!SignedIn) {
+  if (!isSignedIn) {
     return RedirectToSignIn()
   }
   
@@ -37,13 +66,18 @@ export default function App() {
 function Current_Medications_Activity() {
   
   const [medication, setmedication] = useState([]);
+  const [editMode, setEditMode] = useState(true); // state to determine if this windo should be in edit mode or not.
   useEffect(() => {
     const fetchMedications = async () => {
-      const res = await fetch(`/api/medication`);
-      const data = await res.json();
-      if (data.length != 0) {
-        setmedication(data[0].medicine);
-      }
+      // const res = await fetch(`/api/medication`);
+      // const data = await res.json();
+      const data = medicines;
+      setmedication(data[0].medicine);
+      console.log("data",data)
+      // if (data.length != 0) {
+      //   setmedication(data[0].medicine);
+      // }
+      
     };
 
     fetchMedications();
@@ -53,16 +87,30 @@ function Current_Medications_Activity() {
   const medicationList = medication.map((medication,index) =>(
     <MedicationCard key={index} medication={medication.medication} time={medication.timeOfUse}/>
   ))
+  
+  if (editMode == true) {
+    return (<>
+      {nextMedication(medication)}
+      <div className='p-4  mt-4 border border-gray-300 rounded-lg shadow-sm'>
+        <h3 className="text-xl font-semibold mb-2">Today&apos;s Medications</h3>
+        <ScheduleForm medicines = {medication}/> {/* if in edit mode, show the schedule form */}
+        <div className="mt-4 cursor-pointer hover:underline">
+          <p className="text-(--secondary) text-right" onClick={() => setEditMode(!editMode)}>Save</p>
+        </div>
+      </div> 
+    
+    </>)
+  }
 
   return (
     <>
       {nextMedication(medication)}
       <div className='p-4  mt-4 border border-gray-300 rounded-lg shadow-sm'>
         <h3 className="text-xl font-semibold mb-2">Today&apos;s Medications</h3>
-        {medicationList}
-
+        {medication && medicationList} {/* render medication list if we have/had medications for tody. need seperate response for all medications taken.*/}
+        { medication.length == 0 && <p className='text-center text-(--textLightGrey)'>No Medications Found</p>} {/* if no medications for today are found.*/}
         <div className="mt-4 cursor-pointer hover:underline">
-          <p className="text-(--secondary) text-right">Edit Medications</p>
+          <p className="text-(--secondary) text-right" onClick={() => setEditMode(!editMode)}>Edit Medications</p>  {/* If not in edit mode show edit option*/}
         </div>
       </div> 
     </>

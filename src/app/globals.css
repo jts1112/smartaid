@@ -26,6 +26,9 @@
     --secondaryBG: #DEE1E7;
     --textPrimary:var(--primary);
     --textSecondary: rgb(45, 44, 44);
+    --textLightGrey: #c2c2c5;
+
+    --grey-bg: #a5a2a2;
   }
 }
 

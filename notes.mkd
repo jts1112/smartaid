@@ -1,0 +1,14 @@
+
+### 9/17/25
+Encountered problem with schedule form not updating the local state of medicines in the schedule form. Until it the edit state was changed it it ended up being re-rendered. learned about prop and local state pattern and syncing the local state when a change in the prop changes.
+
+* Used use effect to rerender when prop specific part of prop changed. medicenest is the prop being passed in.
+    ```
+    useEffect(() => {
+        if(Array.isArray(medicinest.medicines)) {
+            setMedicine(medicinest.medicines);
+        }
+    }, [medicinest.medicines]);
+    ```
+
+* breifly ran into issue where condition wasnt hiting because was checking Array.isArray(medicinest) wich was always false since medicinest is the complete object and not the array. suggests variable refactoring is needed.
