@@ -31,18 +31,15 @@ var unfilledMedicine = {dayOfWeek:[],
         taken:false,
         userId: ""}
 
-export function ScheduleForm(medicinest) {
-    const [medicine, setMedicine] = useState(medicinest.medicines);
+export function ScheduleForm({medicinest, onSave,onCancel}) {
+    const [medicine, setMedicine] = useState(medicinest);
     
     // re-sync if parent sends new medicines
     useEffect(() => {
-        if(Array.isArray(medicinest.medicines)) {
-            setMedicine(medicinest.medicines);
+        if(Array.isArray(medicinest)) {
+            setMedicine(medicinest);
         }
-    }, [medicinest.medicines]);
-
-    console.log('prop medicinest:', medicinest);
-    console.log('localMeds:',medicine);
+    }, [medicinest]);
 
     return (
         <>
@@ -68,6 +65,10 @@ export function ScheduleForm(medicinest) {
         </form>
         : <p>No Medications</p>}
         <button className="text-(--secondary) text-right" onClick={() => setMedicine([...medicine,unfilledMedicine])}>add a medication</button>
+        <div className="flex justify-end gap-4 mt-4 cursor-pointer ">
+            <div className="text-(--secondary) text-right hover:underline" onClick={() => {setMedicine(medicinest); onCancel(); }}>Cancel</div>
+            <div className="text-(--secondary) text-right hover:underline" onClick={() => onSave(medicine)}>Save</div>
+        </div>
         </>
         
     )
@@ -121,7 +122,6 @@ function MedicationSchedule({currentMedication,index, onUpdate,onDelete}) {
                         ? currentMedication.dayOfWeek.filter(d=> d!== dindex) // if we did have it re remove it.
                         : [...currentMedication.dayOfWeek,dindex]; // if we didnt have it add it.
                         onUpdate(index,{...currentMedication, dayOfWeek: newDays})
-                        console.log("newDays ",newDays)
                     }} defaultChecked={currentMedication.dayOfWeek.includes(dindex)}></input>
                     </div >
                     

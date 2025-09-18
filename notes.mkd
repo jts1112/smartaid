@@ -12,3 +12,9 @@ Encountered problem with schedule form not updating the local state of medicines
     ```
 
 * breifly ran into issue where condition wasnt hiting because was checking Array.isArray(medicinest) wich was always false since medicinest is the complete object and not the array. suggests variable refactoring is needed.
+
+*  [Solved] When adding a medication that is taken but not on the current day. The mediction shows up on the Todays medication list. Need to move filtering displaying todays medications to front end instead of it being in the medication route.
+
+
+### Quick Note of Current Issues Found. Reverse Chronological
+* **Solved 9/17/25** When adding a medication that is taken but not on the current day. The mediction shows up on the Todays medication list. Need to move filtering displaying todays medications to front end instead of it being in the medication route.

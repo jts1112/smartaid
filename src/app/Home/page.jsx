@@ -11,6 +11,10 @@ import { createDateSchedule } from '../../../lib/actions';
 // import {MedicationChart} from '../../components/MedicationChart';
 import {ScheduleForm} from '../../components/ScheduleForm';
 
+const Today = new Date()
+
+// function accomodated for 0 based date when counting the day of the week.
+function getDay_0_based(){return Today.getDay() - 1}
 var medicines =  
     [
   {
@@ -58,7 +62,6 @@ export default function App() {
       <Current_Medications_Activity/>
       <Quick_Log_Activity/>
       <Recent_Activities_Activity/>
-      <ScheduleForm/>
     </div>
      </>)
 };
@@ -84,19 +87,24 @@ function Current_Medications_Activity() {
   }, []);
 
  
-  const medicationList = medication.map((medication,index) =>(
+  const medicationList = medication.filter(med => med.dayOfWeek.includes(getDay_0_based())) // Note the -1 is because getDay() starts at one not 0
+  .map((medication,index) =>(
     <MedicationCard key={index} medication={medication.medication} time={medication.timeOfUse}/>
   ))
+  console.log("getDay",Today.getDay());
   
   if (editMode == true) {
     return (<>
       {nextMedication(medication)}
       <div className='p-4  mt-4 border border-gray-300 rounded-lg shadow-sm'>
         <h3 className="text-xl font-semibold mb-2">Today&apos;s Medications</h3>
-        <ScheduleForm medicines = {medication}/> {/* if in edit mode, show the schedule form */}
-        <div className="mt-4 cursor-pointer hover:underline">
-          <p className="text-(--secondary) text-right" onClick={() => setEditMode(!editMode)}>Save</p>
-        </div>
+        <ScheduleForm medicinest = {medication} onSave={ (updatedMedication) =>{
+          updatedMedication.sort((a,b) => a.timeOfUse < b.timeOfUse) // medications could be changing times.
+          setmedication(updatedMedication)
+          setEditMode(!editMode)
+        }}
+        onCancel={()=> setEditMode(!editMode)}
+        /> {/* if in edit mode, show the schedule form */}
       </div> 
     
     </>)
