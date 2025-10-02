@@ -7,7 +7,7 @@ import MedicationCard from '../../components/MedicationCard';
 import { ClerkLoading, RedirectToSignIn, SignedIn, UserButton} from '@clerk/nextjs';
 import { useUser,useAuth } from '@clerk/nextjs';
 import { useEffect, useState } from 'react';
-import { createDateSchedule } from '../../../lib/actions';
+import { createorUpdateDateSchedule } from '../../../lib/actions';
 // import {MedicationChart} from '../../components/MedicationChart';
 import {ScheduleForm} from '../../components/ScheduleForm';
 
@@ -15,6 +15,7 @@ const Today = new Date()
 
 // function accomodated for 0 based date when counting the day of the week.
 function getDay_0_based(){return Today.getDay() - 1}
+
 var medicines =  
     [
   {
@@ -73,9 +74,10 @@ function Current_Medications_Activity() {
   useEffect(() => {
     const fetchMedications = async () => {
       // const res = await fetch(`/api/medication`);
-      // const data = await res.json();
-      const data = medicines;
-      setmedication(data[0].medicine);
+      const res = await createorUpdateDateSchedule();
+      const data = await res;
+      // const data = medicines;
+      // setmedication(data[0].medicine);
       console.log("data",data)
       // if (data.length != 0) {
       //   setmedication(data[0].medicine);
@@ -101,6 +103,7 @@ function Current_Medications_Activity() {
         <ScheduleForm medicinest = {medication} onSave={ (updatedMedication) =>{
           updatedMedication.sort((a,b) => a.timeOfUse < b.timeOfUse) // medications could be changing times.
           setmedication(updatedMedication)
+          createorUpdateDateSchedule(medication)
           setEditMode(!editMode)
         }}
         onCancel={()=> setEditMode(!editMode)}
@@ -141,7 +144,7 @@ function Quick_Log_Activity(){
        <textarea className="w-full mt-4 mb-4 p-2 border border-gray-300 rounded-md" rows="1" placeholder='Enter Symptoms'></textarea>
       
         <div className="flex justify-end">
-          <button className="self-end text-center p-1 w-18 border-2 border-(--secondary) rounded-sm bg-(--secondary) text-white" onClick={createDateSchedule}>Load Today</button>
+          <button className="self-end text-center p-1 w-18 border-2 border-(--secondary) rounded-sm bg-(--secondary) text-white">Load Today</button>
         </div>
       </div> 
     </>

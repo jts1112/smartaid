@@ -28,6 +28,8 @@
     --textSecondary: rgb(45, 44, 44);
     --textLightGrey: #c2c2c5;
 
+    --cardLightBorder: #b4c5ca52;
+
     --grey-bg: #a5a2a2;
   }
 }
@@ -55,5 +57,27 @@ div {
   border: 1px solid var(--primary);
   z-index: 50; /* Make sure it appears above */
   box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+}
+
+.center-line {
+  position: fixed; /* Position relative to the viewport */
+  background-color: red; /* Or any color you prefer */
+  z-index: 9999; /* Ensure lines are on top of other content */
+}
+
+.horizontal {
+  top: 50%; /* Position at 50% from the top */
+  left: 0;
+  right: 0;
+  height: 1px; /* Thickness of the horizontal line */
+  transform: translateY(-50%); /* Adjust for line thickness to truly center */
+}
+
+.vertical {
+  left: 50%; /* Position at 50% from the left */
+  top: 0;
+  bottom: 0;
+  width: 1px; /* Thickness of the vertical line */
+  transform: translateX(-50%); /* Adjust for line thickness to truly center */
 }
 

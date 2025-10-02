@@ -1,8 +1,8 @@
 
 ### 9/17/25
-Encountered problem with schedule form not updating the local state of medicines in the schedule form. Until it the edit state was changed it it ended up being re-rendered. learned about prop and local state pattern and syncing the local state when a change in the prop changes.
+Encountered problem with schedule form not updating the local state of medicines in the schedule form. Until the edit state was changed it ended up being re-rendered. learned about prop and local state pattern and syncing the local state when a change in the prop changes.
 
-* Used use effect to rerender when prop specific part of prop changed. medicenest is the prop being passed in.
+* `Lesson Learned` Used use effect to rerender when prop specific part of prop changed. medicenest is the prop being passed in.
     ```
     useEffect(() => {
         if(Array.isArray(medicinest.medicines)) {
@@ -13,8 +13,18 @@ Encountered problem with schedule form not updating the local state of medicines
 
 * breifly ran into issue where condition wasnt hiting because was checking Array.isArray(medicinest) wich was always false since medicinest is the complete object and not the array. suggests variable refactoring is needed.
 
-*  [Solved] When adding a medication that is taken but not on the current day. The mediction shows up on the Todays medication list. Need to move filtering displaying todays medications to front end instead of it being in the medication route.
+*  `Solved` When adding a medication that is taken but not on the current day. The mediction shows up on the Todays medication list. Need to move filtering displaying todays medications to front end instead of it being in the medication route.
+
+### 10/2/25
+Working on cleaning up the home page further. reducing overall repeated css and moving it into styles.js for easy reuse. Created models in TypeScript act as schema.As well as integrating a primary schedule that can be added into schedule.
+
+Primary Schedule will be stored within user specific data. (user table). So loaded in on sign in.
+When loading in todays schedule we we can initialize the default schedule to be the saved schedule if one is not found.
+So when we edit the current schedule we will also need to forward the update to the Primary Schedule aswell.
+
 
 
 ### Quick Note of Current Issues Found. Reverse Chronological
 * **Solved 9/17/25** When adding a medication that is taken but not on the current day. The mediction shows up on the Todays medication list. Need to move filtering displaying todays medications to front end instead of it being in the medication route.
+* When a person has no medications to display today, the next medication displays the next medication regardless of the current day. needs to  be adjusted to display only for the current day.
+* When you edit current medications and save. the databse doesnt get updated. have to edit and save again for the change to occur.
