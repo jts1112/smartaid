@@ -1,14 +1,12 @@
 
 export class SchedulesModel {
-    private userId:String; // Should not be modified after creation
+    private userId:string; // Should not be modified after creation
     private date:Date;
     private medicine:Array<Object>
-    
-    private readonly collectionName:String = "schedules"; // easy reference to collection name to be used.
 
     constructor(object:Object); // Single object parameter
-    constructor(userId:String, date:Date, medicine:Array<Object>);
-    constructor(userIdOrObject:String | Object, date?:Date, medicine?:Array<Object>) {
+    constructor(userId:string, date:Date, medicine:Array<Object>);
+    constructor(userIdOrObject:string | Object, date?:Date, medicine?:Array<Object>) {
         
         if(typeof userIdOrObject === 'object') {
             this.userId = userIdOrObject['userId'];
@@ -21,7 +19,7 @@ export class SchedulesModel {
         }
     }
 
-    public getUserId():String{
+    public getUserId():string{
         return this.userId;
     }
 
@@ -41,9 +39,6 @@ export class SchedulesModel {
         return this.medicine;
     }
 
-    public getCollectionName():String{
-        return this.collectionName;
-    }
 
     public toJSON():Object {
         return {userId:this.userId,
@@ -58,15 +53,15 @@ export class SchedulesModel {
 
 export class Medicine {
     private dayOfWeek:Array<Number>;
-    private name:String;
+    private name:string;
     private timeOfUse:Number;
     private taken:Boolean;
-    private userId:String;
+    private userId:string;
 
     // Overload Signatures
     constructor(object:Object); // Single object parameter
-    constructor(name:String,dayOfWeek:Array<Number>,timeOfUse:Number,taken:Boolean,userId:String); // Individual parameters.
-    constructor(objectOrname: string| Object,dayOfWeek?:Array<Number>,timeOfUse?:Number,taken?:Boolean,userId?:String) {
+    constructor(name:string,dayOfWeek:Array<Number>,timeOfUse:Number,taken:Boolean,userId:string); // Individual parameters.
+    constructor(objectOrname: string| Object,dayOfWeek?:Array<Number>,timeOfUse?:Number,taken?:Boolean,userId?:string) {
         
         if (typeof objectOrname === 'object') {
 
@@ -89,7 +84,7 @@ export class Medicine {
         return this.dayOfWeek;
     }
 
-    public getName():String{
+    public getName():string{
         return this.name;
     }
 
@@ -101,7 +96,7 @@ export class Medicine {
         return this.taken;
     }
 
-    public getUserId():String {
+    public getUserId():string {
         return this.userId;
     }
 
@@ -109,7 +104,7 @@ export class Medicine {
         this.dayOfWeek = dayOfWeek;
     }
 
-    public setMedication(name:String){
+    public setMedication(name:string){
         this.name = name;
     }
 

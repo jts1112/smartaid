@@ -1,20 +1,17 @@
 import { SchedulesModel } from "./schedulesModel";
 
-class userModel {
+export class UserModel {
 
-    private id:String; // Should not be modified after initialization
-    private email:String;
-    private name:String;
+    private userId:string; // should not be able modified after object creation. users Id.
+    private email:string;
+    private name:string;
     private primarySchedule:SchedulesModel; // New field for primary shedule
-    
-    private readonly collectionName:String = 'users'; // easy reference to collection name to be used.
-
 
     constructor(object:Object); // singel object parameter
-    constructor(Id:String, email:String, name:String, primarySchedule:SchedulesModel);
-    constructor(idOrObject:String | Object, email?:String, name?:String, primarySchedule?:SchedulesModel) {
+    constructor(Id:string, email:string, name:string, primarySchedule:SchedulesModel);
+    constructor(idOrObject:string | Object, email?:string, name?:string, primarySchedule?:SchedulesModel,userId?:string) {
         if(typeof idOrObject === 'object') {
-            this.id = idOrObject['id'];
+            this.userId = idOrObject['userId'];
             this.email = idOrObject['email'];
             this.name = idOrObject['name'];
             this.primarySchedule = new SchedulesModel(idOrObject['primarySchedule']);
@@ -22,20 +19,21 @@ class userModel {
         else {
             this.email = email;
             this.name = name;
-            this.id = idOrObject;
             this.primarySchedule = primarySchedule;
+            this.userId = userId;
         }
     }
 
-    public getId():String{
-        return this.id;
+    
+    public getUserId():string{
+        return this.userId;
     }
 
-    public getEmail():String{
+    public getEmail():string{
         return this.email;
     }
 
-    public getName():String{
+    public getName():string{
         return this.name;
     }
 
@@ -47,13 +45,9 @@ class userModel {
         this.primarySchedule = primarySchedule;
     }
 
-    public getCollectionName():String{
-        return this.collectionName;
-    }
-
     public toJSON():Object {
         return {
-            id:this.id,
+            userId:this.userId,
             email:this.email,
             name:this.name,
             primarySchedule:this.primarySchedule.toJSON(),

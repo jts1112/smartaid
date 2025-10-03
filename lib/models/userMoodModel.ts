@@ -1,4 +1,4 @@
-class UserMoodModel {
+export class UserMoodModel {
     // TODO: waiting till I implement mood tracking
-    private collectionName: String = 'userMoods';
+    private collectionName: string = 'userMoods';
 }

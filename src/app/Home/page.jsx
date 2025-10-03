@@ -7,7 +7,9 @@ import MedicationCard from '../../components/MedicationCard';
 import { ClerkLoading, RedirectToSignIn, SignedIn, UserButton} from '@clerk/nextjs';
 import { useUser,useAuth } from '@clerk/nextjs';
 import { useEffect, useState } from 'react';
-import { createorUpdateDateSchedule } from '../../../lib/actions';
+// import { createorUpdateDateSchedule } from '../../../lib/actions';
+import { createOrUpdateSchedule } from '../../../lib/models/repositories/scheduleRepository';
+import {SchedulesModel} from '../../../lib/models/schedulesModel';
 // import {MedicationChart} from '../../components/MedicationChart';
 import {ScheduleForm} from '../../components/ScheduleForm';
 
@@ -74,14 +76,10 @@ function Current_Medications_Activity() {
   useEffect(() => {
     const fetchMedications = async () => {
       // const res = await fetch(`/api/medication`);
-      const res = await createorUpdateDateSchedule();
-      const data = await res;
-      // const data = medicines;
-      // setmedication(data[0].medicine);
+      const res = await createOrUpdateSchedule(null);
+      const data = res;
+      setmedication(data.medicine);
       console.log("data",data)
-      // if (data.length != 0) {
-      //   setmedication(data[0].medicine);
-      // }
       
     };
 
@@ -103,7 +101,7 @@ function Current_Medications_Activity() {
         <ScheduleForm medicinest = {medication} onSave={ (updatedMedication) =>{
           updatedMedication.sort((a,b) => a.timeOfUse < b.timeOfUse) // medications could be changing times.
           setmedication(updatedMedication)
-          createorUpdateDateSchedule(medication)
+          createOrUpdateSchedule(medication)
           setEditMode(!editMode)
         }}
         onCancel={()=> setEditMode(!editMode)}

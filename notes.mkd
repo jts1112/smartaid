@@ -22,6 +22,15 @@ Primary Schedule will be stored within user specific data. (user table). So load
 When loading in todays schedule we we can initialize the default schedule to be the saved schedule if one is not found.
 So when we edit the current schedule we will also need to forward the update to the Primary Schedule aswell.
 
+### 10/3/25
+Working on moving dividing actions into model repositories.
+* Able to load primary schedule from user collection if a current schedule isnt found. Schedule was pre loaded
+* `test` want to test functionality of not pre-loaded.
+* `test` ensure updates migrate up to primary schedule aswell.
+ 
+REMINDERS: 
+ * need to remembers to work on taken attribute.
+
 
 
 ### Quick Note of Current Issues Found. Reverse Chronological
