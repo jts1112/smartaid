@@ -28,12 +28,22 @@ Working on moving dividing actions into model repositories.
 * `test` want to test functionality of not pre-loaded.
 * `test` ensure updates migrate up to primary schedule aswell.
  
+
+### 10/20/25
+function createUserIfNeeded() if needed is causing an error.
+
+    Only plain objects can be passed to Client Components from Server Components. Objects with symbol properties like async_id_symbol are not supported.
+    {}
+    Only plain objects can be passed to Client Components from Server Components. Objects with symbol properties like async_id_symbol are not supported.
+    {: {}} 
+
 REMINDERS: 
  * need to remembers to work on taken attribute.
+   
 
 
 
 ### Quick Note of Current Issues Found. Reverse Chronological
+* **Solved 10/4/25** When a person has no medications to display today, the next medication displays the next medication regardless of the current day. needs to  be adjusted to display only for the current day.
+* **Solved 10/4/25** When you edit current medications and save. the databse doesnt get updated. have to edit and save again for the change to occur.
 * **Solved 9/17/25** When adding a medication that is taken but not on the current day. The mediction shows up on the Todays medication list. Need to move filtering displaying todays medications to front end instead of it being in the medication route.
-* When a person has no medications to display today, the next medication displays the next medication regardless of the current day. needs to  be adjusted to display only for the current day.
-* When you edit current medications and save. the databse doesnt get updated. have to edit and save again for the change to occur.

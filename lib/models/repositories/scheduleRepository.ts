@@ -16,7 +16,7 @@ import { NextResponse } from "next/server";
         return db.collection(collectionName);
     }
 
-    export async function getLastScheduleByUserId():Promise<SchedulesModel|null> {
+    export async function getLastScheduleByUserId():Promise<Object|null> {
          const {id} = await currentUser();
         const currentDate = new Date();
         const startDate = new Date();
@@ -25,16 +25,18 @@ import { NextResponse } from "next/server";
         const db = await getDbConnection();
         const collection = getCollection(db);
         let schedule = await collection.findOne({userId:id});
-        return schedule ? new SchedulesModel(schedule):null;
+        return schedule ? schedule:null;
     }
 
     /**
-     * This function will create a new schedule for the current day if one does not exist.
-     * If one does exist it will return the existing schedule.
-     * If a primary schedule is set for the user it will be used to create the new schedule.
-     * Other wise an empty schedule will be created.
+     * Fetches the most recent schedule for the current user.
+     * If no schedule is found for today, it attempts to load the user's primary schedule from the user collection.
+     * 
+     * If a updatedSchedule is provided, it uses that 
+     * 
+     * ISSUE: When refreshing the page. it loads the current primary schedule into current medications even if a schedule exists.
      */
-    export async function createOrUpdateSchedule(updatedSchedule:SchedulesModel):Promise<SchedulesModel>{
+    export async function createOrUpdateSchedule(updatedSchedule:Object):Promise<Object>{
         const current = await currentUser();
         const currentDate = new Date();
         const startDate = new Date();
@@ -43,34 +45,93 @@ import { NextResponse } from "next/server";
         const db = await getDbConnection();
         const collection = getCollection(db);
 
-        let defaultSchedule :SchedulesModel = (await getMainScheduleByUserId());
-        // let defaultSchedule = {
-        //     userId : current.id,
-        //     date : currentDate, // current date
-        //     medicine : []  // array of schedule objects
-        //   };
+        let todaysSchedule = await getTodaysScheduleByUserId();
 
-        // if we are updating an existing document us that instead of the default schedule.
-        if(updatedSchedule != null) {
-            defaultSchedule = updatedSchedule;
+        // if we have a schedule for today and we are not updating anyting we can just return todays schedule.
+        if (todaysSchedule != null && updatedSchedule == null) {
+            
+            return {
+                ...todaysSchedule,
+                date : todaysSchedule["date"].toISOString()
+            };
         }
-        defaultSchedule.setDate(currentDate);
 
+
+        // Build the default schedule fomr users primary schedelu.
+        let scheduleToInsert :Object = updatedSchedule ?? (await getMainScheduleByUserId()) ?? {};
+        scheduleToInsert["date"] = currentDate;
+
+        if(scheduleToInsert["_id"]){
+            delete scheduleToInsert["_id"];
+        }
+
+        // Insert the updated schedule into the databse.
         const todaysEntry = await collection.findOneAndUpdate(
             {userId:`${current.id}`,
             date:{$gt: startDate}},
-            {$set:defaultSchedule},
+            {$set:scheduleToInsert},
             {upsert:true, returnDocument: 'after'});
+
+        let { _id, ...rest } = todaysEntry;
+        return {...rest,
+            // _id:todaysEntry?._id.toString(),
+            date: todaysEntry.date.toISOString()}; // I guess _id and data are not serializable by default.
+
+
+
+
+
         
-        return {...todaysEntry,_id:todaysEntry._id.toString(),date: todaysEntry.date.toISOString()}; // I guess _id and data are not serializable by default.
+
+
+        // // if we are updating an existing document us that instead of the default schedule.
+        // if(updatedSchedule != null) {
+        //     defaultSchedule = updatedSchedule;
+        // }
+        // defaultSchedule["date"] = currentDate;
+
+        //  // Exclude _id from the update data, since it cannot be updated.
+        // const todaysEntry = await collection.findOneAndUpdate(
+        //     {userId:`${current.id}`,
+        //     date:{$gt: startDate}},
+        //     {$set:defaultSchedule},
+        //     {upsert:true, returnDocument: 'after'});
+        // const { _id, ...rest } = todaysEntry;
+        // return {...rest,
+        //     // _id:todaysEntry?._id.toString(),
+        //     date: todaysEntry.date.toISOString()}; // I guess _id and data are not serializable by default.
         
     }
 
-    export async function createSchedule(schedule:SchedulesModel):Promise<SchedulesModel> {
+    export async function createSchedule(schedule:Object):Promise<Object> {
         assert(schedule != null, "Schedule cannot be null");
-        assert(schedule.getUserId()!= null && schedule.getUserId() != "", "Schedule must have a valid userId");
+        assert(schedule["userId"]!= null && schedule["userId"] != "", "Schedule must have a valid userId");
         const db = await getDbConnection();
         const collection = getCollection(db);
-        await collection.insertOne(schedule.toJSON());
+        await collection.insertOne(schedule);
         return schedule;
+    }
+
+    /**
+     * Returns the current schedule for the user if it exists.
+     * If no schedule exists for today, returns null.
+     */
+    export async function getTodaysScheduleByUserId():Promise<Object|null> {
+        
+        const current = await currentUser();
+        const currentDate = new Date();
+        currentDate.setHours(0,0,0);
+
+        const db = await getDbConnection();
+        const collection = getCollection(db);
+        let schedule = await collection.findOne({userId:current.id,
+            date:{$gt: currentDate}
+        });
+
+        if(schedule) { // If we did get a response we can destucture Id and conert date.
+            delete schedule["_id"];
+            // schedule["date"]
+        }
+
+        return schedule ? schedule:null;
     }

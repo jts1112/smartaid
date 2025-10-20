@@ -12,11 +12,12 @@ import { createOrUpdateSchedule } from '../../../lib/models/repositories/schedul
 import {SchedulesModel} from '../../../lib/models/schedulesModel';
 // import {MedicationChart} from '../../components/MedicationChart';
 import {ScheduleForm} from '../../components/ScheduleForm';
+import { createUserIfNeeded, updateMainScheduleForUser } from '../../../lib/models/repositories/userRepository';
 
 const Today = new Date()
 
 // function accomodated for 0 based date when counting the day of the week.
-function getDay_0_based(){return Today.getDay() - 1}
+function getDay_0_based(){return Today.getDay()}
 
 var medicines =  
     [
@@ -51,6 +52,13 @@ var medicines =
 export default function App() {
   const {isSignedIn,user,isLoaded} =  useUser();
 
+  useEffect(() => {
+    if (isLoaded && isSignedIn) {
+      // fire only once per signed-in user
+      createUserIfNeeded();
+    }
+  }, [isLoaded, isSignedIn, user]);
+
   if (!isLoaded) {
     return <ClerkLoading/>;
   }
@@ -71,14 +79,14 @@ export default function App() {
 
 function Current_Medications_Activity() {
   
-  const [medication, setmedication] = useState([]);
-  const [editMode, setEditMode] = useState(true); // state to determine if this windo should be in edit mode or not.
+  const [medication, setmedication] = useState({});
+  const [editMode, setEditMode] = useState(false); // state to determine if this windo should be in edit mode or not.
   useEffect(() => {
     const fetchMedications = async () => {
       // const res = await fetch(`/api/medication`);
       const res = await createOrUpdateSchedule(null);
       const data = res;
-      setmedication(data.medicine);
+      setmedication(data);
       console.log("data",data)
       
     };
@@ -87,21 +95,22 @@ function Current_Medications_Activity() {
   }, []);
 
  
-  const medicationList = medication.filter(med => med.dayOfWeek.includes(getDay_0_based())) // Note the -1 is because getDay() starts at one not 0
-  .map((medication,index) =>(
-    <MedicationCard key={index} medication={medication.medication} time={medication.timeOfUse}/>
-  ))
-  console.log("getDay",Today.getDay());
   
   if (editMode == true) {
     return (<>
-      {nextMedication(medication)}
+      {nextMedication(medication["medicine"] ? medication["medicine"].filter(med => med.dayOfWeek.includes(getDay_0_based())) : [])}
       <div className='p-4  mt-4 border border-gray-300 rounded-lg shadow-sm'>
         <h3 className="text-xl font-semibold mb-2">Today&apos;s Medications</h3>
-        <ScheduleForm medicinest = {medication} onSave={ (updatedMedication) =>{
-          updatedMedication.sort((a,b) => a.timeOfUse < b.timeOfUse) // medications could be changing times.
-          setmedication(updatedMedication)
-          createOrUpdateSchedule(medication)
+        <ScheduleForm medicinest = {medication["medicine"] ? medication["medicine"]:[]} onSave={ (updatedMedication) =>{
+           
+          const updatedMed = {
+            ...medication,
+            medicine:updatedMedication.sort((a,b) => a.timeOfUse < b.timeOfUse) // medications could be changing times.
+          };
+
+          setmedication(updatedMed)
+          createOrUpdateSchedule(updatedMed); // save updated medication.
+          updateMainScheduleForUser(updatedMed);
           setEditMode(!editMode)
         }}
         onCancel={()=> setEditMode(!editMode)}
@@ -111,13 +120,20 @@ function Current_Medications_Activity() {
     </>)
   }
 
+  console.log("medication",medication)
+  const medicationList = medication["medicine"] ? medication["medicine"].filter(med => med.dayOfWeek.includes(getDay_0_based())) // Note the -1 is because getDay() starts at one not 0
+  .map((medication,index) =>(
+    <MedicationCard key={index} medication={medication.medication} time={medication.timeOfUse}/>
+  )) : [];
+  console.log("getDay",Today.getDay());
+
   return (
     <>
-      {nextMedication(medication)}
+      {nextMedication(medication["medicine"] ? medication["medicine"].filter(med=> med.dayOfWeek.includes(getDay_0_based())) : [])}
       <div className='p-4  mt-4 border border-gray-300 rounded-lg shadow-sm'>
         <h3 className="text-xl font-semibold mb-2">Today&apos;s Medications</h3>
-        {medication && medicationList} {/* render medication list if we have/had medications for tody. need seperate response for all medications taken.*/}
-        { medication.length == 0 && <p className='text-center text-(--textLightGrey)'>No Medications Found</p>} {/* if no medications for today are found.*/}
+        {medication["medicine"] && medicationList} {/* render medication list if we have/had medications for tody. need seperate response for all medications taken.*/}
+        { !medication["medicine"] && <p className='text-center text-(--textLightGrey)'>No Medications Found</p>} {/* if no medications for today are found.*/}
         <div className="mt-4 cursor-pointer hover:underline">
           <p className="text-(--secondary) text-right" onClick={() => setEditMode(!editMode)}>Edit Medications</p>  {/* If not in edit mode show edit option*/}
         </div>
